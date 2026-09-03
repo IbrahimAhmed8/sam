@@ -41,6 +41,7 @@ if [[ -z "${MESH_HELPERS_LOADED:-}" ]]; then
     fi
     mesh_build_runtime_image
 
+    export SAM_UNSAFE_ALLOW_LOCAL_TARGETS=1
     MESH_PREFIX="mesh-${BATS_TEST_NUMBER}-$$-$(date +%s)"
     MESH_SOCKET_DIR="/tmp/${MESH_PREFIX}-sockets"
     mkdir -p "${MESH_SOCKET_DIR}"
@@ -308,6 +309,7 @@ if [[ -z "${MESH_HELPERS_LOADED:-}" ]]; then
 
   mesh_setup_suite() {
     export PATH="${HOME}/go/bin:$PATH"
+    export SAM_UNSAFE_ALLOW_LOCAL_TARGETS=1
     mesh_cleanup_stale_resources
     if ! command -v docker >/dev/null 2>&1 || ! docker info >/dev/null 2>&1; then
       echo "docker not available or daemon not running" >&2
@@ -489,6 +491,7 @@ if [[ -z "${MESH_HELPERS_LOADED:-}" ]]; then
       ${docker_args} \
       -e SAM_CLIENT_SECRET="sam-e2e-secret" \
       -e SAM_API_TOKEN="secret-token" \
+      -e SAM_UNSAFE_ALLOW_LOCAL_TARGETS="1" \
       "${MESH_RUNTIME_IMAGE}" \
       /usr/local/bin/sam-node run \
       ${flags} \

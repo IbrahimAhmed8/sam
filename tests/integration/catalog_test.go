@@ -42,10 +42,12 @@ func tokenPath(t *testing.T, secret string) string {
 
 func startBackgroundNode(t *testing.T, nodeBin string, routerAddr string, homeDir string, args ...string) *exec.Cmd {
 	t.Helper()
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	env := append(os.Environ(),
 		"HOME="+homeDir,
 		"XDG_CONFIG_HOME="+filepath.Join(homeDir, ".config"),
 		"SAM_API_TOKEN=test-token", // per-test overrides use --api-token-path, which wins
+		"SAM_UNSAFE_ALLOW_LOCAL_TARGETS=1",
 	)
 	allArgs := append([]string{"run", "--control-plane", routerAddr, "--jwt", "test-jwt", "--bind-addr", "127.0.0.1:0", "--allow-loopback"}, args...)
 	cmd := exec.Command(nodeBin, allArgs...)

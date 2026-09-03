@@ -140,6 +140,7 @@ docker run --name host-node \
   -v /tmp/host-node-data:/data \
   --add-host=host.docker.internal:host-gateway \
   -e SAM_API_TOKEN=host-token \
+  -e SAM_UNSAFE_ALLOW_LOCAL_TARGETS=1 \
   -d --rm \
   sam-node:local \
   run \

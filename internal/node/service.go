@@ -17,16 +17,54 @@ package node
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"os/exec"
 	"strings"
+	"sync"
 
 	"github.com/google/sam/api"
 	"github.com/ipfs/go-cid"
 	"github.com/multiformats/go-multihash"
 )
+
+var (
+	lookupIPMu sync.Mutex
+	lookupIP   = net.LookupIP
+)
+
+func validateTargetURL(raw string) error {
+	if os.Getenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS") == "1" {
+		return nil
+	}
+	u, err := url.Parse(raw)
+	if err != nil {
+		return fmt.Errorf("invalid target URL: %w", err)
+	}
+	host := u.Hostname()
+	if host == "" {
+		return fmt.Errorf("invalid target address")
+	}
+	lookupIPMu.Lock()
+	resolve := lookupIP
+	lookupIPMu.Unlock()
+	ips, err := resolve(host)
+	if err != nil {
+		return fmt.Errorf("invalid target address")
+	}
+	if len(ips) == 0 {
+		return fmt.Errorf("invalid target address")
+	}
+	for _, ip := range ips {
+		if ip.IsLoopback() || ip.IsLinkLocalUnicast() || ip.IsUnspecified() {
+			return fmt.Errorf("invalid target address")
+		}
+	}
+	return nil
+}
 
 // Service is the contract the ServiceRegistry and ingress server use.
 // Implementations own all type-specific behaviour; the registry stays
@@ -51,6 +89,9 @@ type baseService struct {
 // newReverseProxyHandler builds a single-host reverse-proxy handler for a
 // URL backend. Same code path as today's URL branch in RegisterService.
 func newReverseProxyHandler(targetURL string) (http.Handler, error) {
+	if err := validateTargetURL(targetURL); err != nil {
+		return nil, err
+	}
 	u, err := url.Parse(targetURL)
 	if err != nil {
 		return nil, fmt.Errorf("invalid target URL: %w", err)

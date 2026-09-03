@@ -42,6 +42,7 @@ BOOTSTRAP_TOKEN="$(printf '%s' "${TOKEN_RESPONSE}" | jq -r '.token // empty' 2>/
 echo "Enrolling local ./bin/sam-node into the mesh control plane at ${CONTROL_PLANE_URL}…"
 echo "  MCP/sidecar API on 127.0.0.1:9099"
 export SAM_API_TOKEN=devtoken
+export SAM_UNSAFE_ALLOW_LOCAL_TARGETS=1
 exec ./bin/sam-node run \
   --control-plane "${CONTROL_PLANE_URL}" \
   --bootstrap-token "${BOOTSTRAP_TOKEN}" \

@@ -36,6 +36,7 @@ import (
 // lists the model on /v1/models and serves /v1/chat/completions for it across
 // the mesh.
 func TestOpenAIFacadeCUJ(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, hubAddr := startMockRouter(t)
 

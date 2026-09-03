@@ -35,6 +35,7 @@ import (
 )
 
 func TestRouterFederationAndRelay(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	cpBin := buildBinary(t, "./cmd/sam-control-plane")
 	routerBin := buildBinary(t, "./cmd/sam-router")
 	nodeBin := buildBinary(t, "./cmd/sam-node")

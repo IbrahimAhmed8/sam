@@ -32,6 +32,7 @@ import (
 )
 
 func TestIntegrationStdioDatapath(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, routerAddr := startMockRouter(t)
 
@@ -157,6 +158,7 @@ func TestIntegrationStdioDatapath(t *testing.T) {
 }
 
 func TestIntegrationHTTPDatapath(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, routerAddr := startMockRouter(t)
 

@@ -33,6 +33,7 @@ import (
 )
 
 func TestServiceDiscovery(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, routerAddr := startMockRouter(t)
 
@@ -137,6 +138,7 @@ func TestServiceDiscovery(t *testing.T) {
 }
 
 func TestServiceDiscoveryStreaming(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, routerAddr := startMockRouter(t)
 

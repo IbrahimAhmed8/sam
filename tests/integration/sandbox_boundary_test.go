@@ -43,6 +43,7 @@ import (
 //
 // One mesh is set up for the whole test: the cases are cheap, the mesh is not.
 func TestSandboxBoundaryCUJ(t *testing.T) {
+	t.Setenv("SAM_UNSAFE_ALLOW_LOCAL_TARGETS", "1")
 	nodeBin := buildBinary(t, "./cmd/sam-node")
 	_, hubAddr := startMockRouter(t)
 

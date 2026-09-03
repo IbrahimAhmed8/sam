@@ -74,6 +74,7 @@ teardown() {
     --network "${MESH_NETWORK}" \
     $(mesh_get_add_hosts) \
     -v "${data_vol}:/data" \
+    -e SAM_UNSAFE_ALLOW_LOCAL_TARGETS="1" \
     "sam-node:local" \
     run \
     --data-dir /data \
@@ -117,6 +118,7 @@ teardown() {
     $(mesh_get_add_hosts) \
     -v "${token_vol}:/var/run/secrets/tokens" \
     -e SAM_API_TOKEN="secret-token" \
+    -e SAM_UNSAFE_ALLOW_LOCAL_TARGETS="1" \
     "sam-node:local" \
     run \
     --control-plane "http://sam-control-plane:8080" \
@@ -181,6 +183,7 @@ teardown() {
     --network "${MESH_NETWORK}" \
     $(mesh_get_add_hosts) \
     -v "${data_vol}:/data" \
+    -e SAM_UNSAFE_ALLOW_LOCAL_TARGETS="1" \
     "sam-node:local" \
     run \
     --data-dir /data \
